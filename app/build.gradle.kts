@@ -56,7 +56,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
+    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     val room_version = "2.8.4"
@@ -67,4 +67,8 @@ dependencies {
 
     implementation("com.opencsv:opencsv:5.9")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.1")
+
+    implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
+    implementation("com.google.ai.edge.litert:litert:2.1.0")
+
 }

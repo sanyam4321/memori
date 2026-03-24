@@ -12,6 +12,7 @@ import com.example.memori.ui.StudyScreen
 import com.example.memori.ui.theme.MemoriTheme
 import com.example.memori.viewmodel.MemoriViewModel
 import com.example.memori.ui.ManageCardsScreen
+import com.example.memori.ui.SearchScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,17 +27,25 @@ class MainActivity : ComponentActivity() {
                         DashboardScreen(
                             viewModel = viewModel,
                             onStartStudy = { navController.navigate("study") },
-                            onManageCards = { navController.navigate("manage") }
+                            onManageCards = { navController.navigate("manage") },
+                            onSearchClick = { navController.navigate("search") }
                         )
                     }
                     composable("study") {
                         StudyScreen(
                             viewModel = viewModel,
-                            onFinished = { navController.popBackStack() }
+                            onFinished = { navController.popBackStack() },
+                            onBackClick = { navController.popBackStack() }
                         )
                     }
                     composable("manage") {
                         ManageCardsScreen(viewModel = viewModel)
+                    }
+                    composable("search") {
+                        SearchScreen(
+                            viewModel = viewModel,
+                            onBackClick = { navController.popBackStack() }
+                        )
                     }
                 }
             }

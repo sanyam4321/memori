@@ -2,6 +2,8 @@ package com.example.memori.data
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import androidx.room.Dao
+import androidx.room.Query
 
 @Dao
 interface MemoriDao {
@@ -29,4 +31,11 @@ interface MemoriDao {
 
     @Query("SELECT * FROM review_log ORDER BY dayEpoch DESC LIMIT 7")
     fun getRecentLogs(): Flow<List<ReviewLog>>
+
+    @Query("""
+        SELECT flashcards.* FROM flashcards
+        JOIN flashcards_fts ON flashcards.id = flashcards_fts.rowid
+        WHERE flashcards_fts MATCH :searchQuery
+    """)
+    fun searchCards(searchQuery: String): Flow<List<Flashcard>>
 }

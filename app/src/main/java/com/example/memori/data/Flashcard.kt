@@ -1,6 +1,8 @@
 package com.example.memori.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Fts4
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "flashcards")
@@ -9,7 +11,13 @@ data class Flashcard(
     val deckName: String,
     val frontText: String,
     val backText: String,
-    val nextReviewDate: Long = 0L, // SRS: When to show next
-    val interval: Int = 0, // SRS: Days between reviews
-    val easeFactor: Float = 2.5f // SRS: Multiplier for difficulty
+    val nextReviewDate: Long = 0L,
+    val interval: Int = 0,
+    val easeFactor: Float = 2.5f
+)
+
+@Fts4(contentEntity = Flashcard::class)
+@Entity(tableName = "flashcards_fts")
+data class FlashcardFts(
+    @ColumnInfo(name = "frontText") val frontText: String
 )

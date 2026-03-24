@@ -13,7 +13,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
-
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
 class MemoriViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).memoriDao()
@@ -21,6 +25,10 @@ class MemoriViewModel(application: Application) : AndroidViewModel(application) 
     val dueCards = dao.getDueCards().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     val allCards = dao.getAllCards().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     val recentLogs = dao.getRecentLogs().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
 
     fun addNewCard(front: String, back: String) {
         viewModelScope.launch {
@@ -61,6 +69,19 @@ class MemoriViewModel(application: Application) : AndroidViewModel(application) 
         } else {
             dao.insertOrUpdateLog(ReviewLog(dayEpoch = todayEpoch, reviewCount = 1))
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val searchResults = _searchQuery.flatMapLatest { query ->
+        if (query.isBlank()) {
+            flowOf(emptyList())
+        } else {
+            dao.searchCards("$query*")
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
     }
 
     fun importCsv(uri: Uri) {

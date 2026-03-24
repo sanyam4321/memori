@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Flashcard::class, ReviewLog::class], version = 1, exportSchema = false)
+@Database(entities = [Flashcard::class, FlashcardFts::class, ReviewLog::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun memoriDao(): MemoriDao
 
@@ -19,7 +19,8 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "memori_database"
-                ).build()
+                )
+                    .build()
                 INSTANCE = instance
                 instance
             }
